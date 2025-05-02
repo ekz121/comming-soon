@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ringkasan Curhat</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header {
+            background: #2c2c2c;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        header img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            color: #00ffcc;
+        }
+
+        .summary-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #2c2c2c;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+            animation: slideUp 0.8s ease-out;
+            border: 2px solid #00ffcc;
+        }
+
+        .summary-item {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffcc;
+            font-weight: 500;
+        }
+
+        p {
+            padding: 12px;
+            background: #3d3d3d;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #00ffcc;
+            border: none;
+            border-radius: 8px;
+            color: #1a1a1a;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: #00e6b8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .summary-container {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            button {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="img/1.jpeg" alt="Logo penting">
+        <h1>arsip rahasia negara konoha</h1>
+    </header>
+
+    <div class="summary-container">
+        <div class="summary-item">
+            <label>1. plan apa yang anda punya untuk TI polteksi kedepanya dengan fasilitas yang sudah dijelaskan dosen dosen sekalian(direkomendasikan bersama,bukan individu)</label>
+            <p id="summaryEssay1"></p>
+        </div>
+        <div class="summary-item">
+            <label>2. plan apa yang anda punya untuk TI polteksi jika ternyata fasilitas dari awal masuk sampai seterusnya (lulus)tidak ada yang berubah(direkomendasikan bersama,bukan individu)</label>
+            <p id="summaryEssay2"></p>
+        </div>
+        <div class="summary-item">
+            <label>Nama</label>
+            <p id="summaryName"></p>
+        </div>
+        <div class="summary-item">
+            <label>Email</label>
+            <p id="summaryEmail"></p>
+        </div>
+        <div class="summary-item">
+            <label>mau jadi apa di masa depan(jawaban individu boleh,bersama boleh)</label>
+            <p id="summaryAspiration"></p>
+        </div>
+        <button onclick="sendEmail()">Kirim</button>
+    </div>
+
+    <footer>
+        everything is ok
+    </footer>
+
+    <!-- Tambahkan EmailJS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Inisialisasi EmailJS dengan Public Key
+        (function(){
+            emailjs.init("EO5oTo-thw3OIoZyy");
+        })();
+
+        // Ambil data dari sessionStorage
+        const responses = JSON.parse(sessionStorage.getItem('responses')) || {};
+        document.getElementById('summaryEssay1').textContent = responses.essay1 || '';
+        document.getElementById('summaryEssay2').textContent = responses.essay2 || '';
+        document.getElementById('summaryName').textContent = responses.name || '';
+        document.getElementById('summaryEmail').textContent = responses.email || '';
+        document.getElementById('summaryAspiration').textContent = responses.aspiration || '';
+
+        function sendEmail() {
+            const params = {
+                essay1: responses.essay1 || '',
+                essay2: responses.essay2 || '',
+                name: responses.name || '',
+                email: responses.email || '',
+                aspiration: responses.aspiration || ''
+            };
+
+            emailjs.send('service_n11rglg', 'template_d0tf2nl', params)
+                .then(function(response) {
+                    alert('Data berhasil dikirim! Anda akan diarahkan ke halaman reward.');
+                    sessionStorage.removeItem('responses'); // Clear storage after sending
+                    window.location.href = 'reward.html';
+                }, function(error) {
+                    alert('Gagal mengirim data: ' + JSON.stringify(error));
+                });
+        }
+    </script>
+</body>
+</html>
